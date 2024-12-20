@@ -1,7 +1,6 @@
 import express from 'express';
 const app = express();
 import 'dotenv/config';
-import mongoose from 'mongoose';
 import cors from 'cors';
 import session from 'express-session';
 import authController from './controllers/auth.js';
@@ -9,11 +8,7 @@ import booksController from './controllers/books.js';
 
 const PORT = process.env.PORT ?? 3000
 
-// mongoose.connect(process.env.MONGO_URL)
 
-// mongoose.connection.once('open', () => {
-//     console.log('Connected to Mongo...')
-// })
 
 // app.set('trust proxy', true)
 

@@ -1,15 +1,61 @@
 import express from 'express';
 const router = express.Router()
 import bcrypt from 'bcrypt';
-import pg from 'pg';
+import * as db from '../config/sql.js';
 
 
-router.post('/register', (req, res) => {
-    res.send('hitting register auth')
+router.post('/register', async (req, res) => {
+    const result = bcrypt.genSalt(10, async function(err, salt) {
+        if (err){
+            return err
+        }
+        bcrypt.hash(req.body.password, salt, async function(err, hash){
+            const value = await db.query(
+                'INSERT INTO users (username, password_hash) VALUES ($1, $2);',
+                [req.body.username, hash]
+            )
+            return value
+        })
+    })
+    res.send('New user created: ', result)
 })
 
-router.post('/login', (req, res) => {
-    res.send('hitting login auth')
+router.post('/login', async (req, res) => {
+    const userData = await db.query(
+        'SELECT username, password_hash FROM users WHERE username = $1;',
+        [req.body.username]
+    )
+    if (userData){
+        bcrypt.compare(req.body.password, userData.password_hash, 
+            function(err, result){
+                if (err){
+                    return err
+                }
+                if (result){
+                    // initiate sessions
+                    res.send('success')
+                } else {
+                    // return login error message for password mismatch
+                    res.send('issue')
+                }
+            }
+        )
+    } else {
+        // return login error messsage for username not found
+        res.send('issue')
+    }
+})
+
+router.delete('/logout', (req, res) => {
+    //Destroy session
+    req.session.destroy((err)=>{
+        if (err) {
+            res.send('There was a problem logging out.')
+        } else {
+            console.log("session destroyed")
+            res.send('Logged out.')
+        }
+    })
 })
 
 export default router;
@@ -47,33 +93,4 @@ export default router;
 //             }
 //         }
 //     })
-// })
-
-// const isAuthenticated = (req, res, next) => {
-//     console.log(`auth type: ${typeof req.session.authenticated}, value: ${req.session.authenticated}`)
-//     if (req.session.authenticated){
-//         console.log('You are logged in.')
-//         return next()
-//     }   else {
-//         console.log('You are not logged in.\nReq.session: ', req.session, '\nAuthenticated: ', req.session.authenticated)
-//         res.send(`You're not logged in.`)
-//     }
-// }
-
-// router.get('/', isAuthenticated, (req, res) => {
-//     console.log('Auth Check, is authenticated?: ', req.session.authenticated)
-//     res.send(req.session)
-// })
-
-// router.delete('/', (req, res) => {
-//     //Destroy session and notify React
-//     req.session.destroy((err)=>{
-//         if (err) {
-//             res.send('There was a problem logging out.')
-//         } else {
-//             console.log("session destroyed")
-//             res.send('Logged out.')
-//         }
-//     })
-    
 // })

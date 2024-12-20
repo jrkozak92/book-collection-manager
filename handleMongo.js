@@ -4,5 +4,5 @@ const BookSchema = {
     isbn: String,
     category: String,
     collection_id: Number, // References PostgreSQL user_collections
-    added_at: Date
+    added_at: Date // default value of now timestamp if possible
 }
