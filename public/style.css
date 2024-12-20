@@ -1,0 +1,11 @@
+h1 {
+    color: red;
+}
+
+.show {
+    display: inline-block;
+}
+
+.hide {
+    display: none;
+}

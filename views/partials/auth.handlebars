@@ -1,0 +1,83 @@
+<section id="auth-controls" class="show">
+    <button type="button" id="login-button">Login</button>
+    <button type="button" onclick="{{showRegisterPrompt}}">Register</button>
+</section>
+<section id="user-controls" class="hide">
+    <p id="account-greeting"></p>
+</section>
+<dialog id="login">
+    <form>
+        <p>Please login: </p>
+        <label for="username">Username: </label>
+        <input type="text" id="username" name="username" required/>
+        <label for="password">Password: </label>
+        <input type="password" id="password" name="password" required/>
+        <button type="submit" class="submit" value="default">Login</button>
+        <button type="button" class="close" value="cancel" formmethod="dialog">Cancel</button>
+        <p id="login-message" class="hide"></p>
+    </form>
+</dialog>
+
+<script>
+    const loginButton = document.querySelector("#login-button")
+    const dialog = document.querySelector("dialog")
+    const closeButton = document.querySelector(".close")
+    const authControls = document.querySelector("#auth-controls")
+    const userControls = document.querySelector("#user-controls")
+    const submitButton = document.querySelector(".submit")
+    const username = document.querySelector("#username")
+    const password = document.querySelector("#password")
+    const accountGreeting = document.querySelector("#account-greeting")
+    const loginMessage = document.querySelector("#login-message")
+
+    loginButton.addEventListener("click", () => {
+        dialog.show()
+    })
+
+    submitButton.addEventListener("click", async (event) => {
+        event.preventDefault()
+        loginMessage.style = "color: black;"
+        loginMessage.innerText = "Logging in..."
+        const response = await fetch("http://localhost:3000/api/auth/login", {
+            method: 'POST',
+            body: JSON.stringify({
+                username: username.value, 
+                password: password.value
+            }),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            mode: 'cors'
+        })
+        let body = ''
+        console.log('response', response)
+        for await (const chunk of response.body){
+            body.concat(chunk)
+        }
+        console.log(body)
+        if (body){
+            authControls.classList.replace("show", "hide")
+            userControls.classList.replace("hide", "show")
+            loginMessage.classList.replace("show", "hide")
+            dialog.close(body)
+            return
+        } else {
+            setTimeout(() => {
+                loginMessage.innerText = "Login unsuccessful, please try again. If you don't have an account yet, please create one by clicking the 'Register' button."
+                loginMessage.style = "color: red;"
+            loginMessage.classList.replace("hide", "show")
+            }, 500)   
+        }
+    })
+
+    closeButton.addEventListener("click", () => {
+        dialog.close('cancel')
+    })
+
+    dialog.addEventListener("close", (e) => {
+        console.log("dialog output", dialog)
+        dialog.returnValue === 'cancel'
+            ? null
+            : accountGreeting.innerText(`Hello, ${returnValue.username}!`)
+    })
+</script>

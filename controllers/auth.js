@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import * as db from '../config/sql.js';
 
 
+
 router.post('/register', async (req, res) => {
     const result = bcrypt.genSalt(10, async function(err, salt) {
         if (err){
@@ -21,10 +22,13 @@ router.post('/register', async (req, res) => {
 })
 
 router.post('/login', async (req, res) => {
-    const userData = await db.query(
+    console.log(req.body.username, req.body.password)
+    const result = await db.query(
         'SELECT username, password_hash FROM users WHERE username = $1;',
         [req.body.username]
     )
+    const userData = result.rows?.[0]
+    console.log(userData)
     if (userData){
         bcrypt.compare(req.body.password, userData.password_hash, 
             function(err, result){
@@ -36,13 +40,13 @@ router.post('/login', async (req, res) => {
                     res.send('success')
                 } else {
                     // return login error message for password mismatch
-                    res.send('issue')
+                    res.send('login failed')
                 }
             }
         )
     } else {
         // return login error messsage for username not found
-        res.send('issue')
+        res.send('login failed')
     }
 })
 

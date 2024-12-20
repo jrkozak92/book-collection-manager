@@ -3,12 +3,17 @@ const app = express();
 import 'dotenv/config';
 import cors from 'cors';
 import session from 'express-session';
+import { engine } from 'express-handlebars';
 import authController from './controllers/auth.js';
 import booksController from './controllers/books.js';
+import * as authHelpers from './utils/authHelpers.js';
+import * as booksHelpers from './utils/booksHelpers.js';
 
 const PORT = process.env.PORT ?? 3000
 
-
+app.engine('handlebars', engine())
+app.set('view engine', 'handlebars')
+app.set('views', './views')
 
 // app.set('trust proxy', true)
 
@@ -39,7 +44,14 @@ app.use('/api/books', booksController)
 
 app.use(express.static('public'))
 app.get('/', (req, res) => {
-    res.send('index')
+    res.render('main', {
+        layout: 'index',
+
+        // helpers: {
+        //     showLoginPrompt() { authHelpers.showLoginPrompt() },
+        //     showRegisterPrompt() { authHelpers.showRegisterPrompt()}
+        // }
+    })
 })
 
 app.listen(PORT, () => {
