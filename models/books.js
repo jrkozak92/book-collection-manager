@@ -9,6 +9,6 @@ const BookSchema = mongoose.Schema({
     added_at: Date
 })
 
-const Books = mongoose.model('Books', BookSchema)
+const Book = mongoose.model('Book', BookSchema)
 
-export default Books;
+export default Book;

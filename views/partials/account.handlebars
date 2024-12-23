@@ -1,0 +1,30 @@
+<p>username @ account {{ username }}</p>
+<section id="user-controls">
+    <p id="account-greeting">Hello, {{username}}!</p>
+    <button type="button" id="logout-button">Logout</button>
+</section>
+
+<script>
+    {{!-- logout handling --}}
+    const userControls = document.querySelector("#user-controls")
+    const accountGreeting = document.querySelector("#account-greeting")
+    const logoutButton = document.querySelector("#logout-button")
+
+    logoutButton.addEventListener("click", async (event) => {
+        event.preventDefault()
+        fetch("http://localhost:3000/api/auth/logout", {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            mode: 'cors'
+        }).then(async (response) => {
+            let parsedResponse = await response.json()
+            if (parsedResponse){
+                window.location.href = ('http://localhost:3000/')
+            }
+        }).catch((err) => {
+            console.error("Server error: ", err)
+        })
+    })
+</script>

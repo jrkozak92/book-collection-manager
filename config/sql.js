@@ -2,7 +2,7 @@ import pg from 'pg';
 const { Pool } = pg;
 import 'dotenv/config';
 
-const pool = new Pool({
+export const pool = new Pool({
     host: process.env.SQL_HOST,
     user: process.env.SQL_USER,
     port: process.env.SQL_DBPORT,

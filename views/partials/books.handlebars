@@ -1,0 +1,11 @@
+<h4>This is the Books partial</h4>
+<div id="books-list">
+    {{#each books}}
+        <div>
+            <p>{{ this.title }}</p>
+            <p>{{ this.author }}</p>
+            <p>{{ this.isbn }}</p>
+            <p>{{ this.collection }}</p>
+        </div>
+    {{/each}}
+</div>

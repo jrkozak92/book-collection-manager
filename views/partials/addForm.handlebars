@@ -1,0 +1,14 @@
+<form action="/api/books" method="POST">
+    <p>Book Details: </p>
+    <label for="title">Title: </label>
+    <input type="text" id="title" name="title" required/>
+    <label for="author">Author: </label>
+    <input type="text" id="author" name="author" required/>
+    <label for="isbn">ISBN: </label>
+    <input type="text" id="isbn" name="isbn" required/>
+    <label for="category">Category: </label>
+    <input type="text" id="category" name="category" required/>
+    <button type="submit" id="add-submit" value="default">Add New Book</button>
+    <button type="button" id="add-close" value="cancel">Cancel</button>
+    <p id="add-message" class="hide"></p>
+</form>

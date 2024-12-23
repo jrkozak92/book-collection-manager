@@ -1,17 +1,18 @@
 import express from 'express';
 const router = express.Router()
-import Books from '../models/books.js';
+import Book from '../models/books.js';
 import * as db from '../config/sql.js';
+import { data } from './views.js';
 
 const isAuthenticated = (req, res, next) => {
-//     console.log(`auth type: ${typeof req.session.authenticated}, value: ${req.session.authenticated}`)
-//     if (req.session.authenticated){
-//         console.log('You are logged in.')
+    // console.log(`auth type: ${typeof req.session.authenticated}, value: ${req.session.authenticated}`)
+    // if (req.session.authenticated){
+    //     console.log('You are logged in.')
         return next()
-//     }   else {
-//         console.log('You are not logged in.\nReq.session: ', req.session, '\nAuthenticated: ', req.session.authenticated)
-//         res.send(`You're not logged in.`)
-//     }
+    // }   else {
+    //     console.log('You are not logged in.\nReq.session: ', req.session, '\nAuthenticated: ', req.session.authenticated)
+    //     res.send(`You're not logged in.`)
+    // }
 }
 
 
@@ -25,21 +26,29 @@ router.get('/', (req, res) => {
     res.send('Getting Books')   
 })
 
-router.post('/', isAuthenticated, (req, res) => {
-    const collectionId = db.query(
-        ''
-    )
-    const newBook = {
-        title: req.body.title,
-        author: req.body.author,
-        isbn: req.body.isbn,
-        category: req.body.category,
-        collection_id: collectionId, // References PostgreSQL user_collections
+router.post('/', isAuthenticated, async (req, res) => {
+    try {
+        const collectionId = 0
+        const sqlResponse = await db.query(
+            'INSERT INTO user_collections(user_id, name) VALUES ($1, $2);',
+            [req.session.user.id, req.params.category]
+        )
+        console.log("Form data @ create: ", req, sqlResponse)
+        const newBook = new Book({
+            title: req.params.title,
+            author: req.params.author,
+            isbn: req.params.isbn,
+            category: req.params.category,
+            collection_id: collectionId ?? 0, // References PostgreSQL user_collections
+        })
+        await newBook.save()
+        data.books.push(newBook)
+        console.log(data.books)
+        res.redirect("/")
+    } catch (err) {
+        console.error("Error creating Book record: ", err)
     }
-    Books.create(newBook, (err, newBook) => {
-
-    })
-}) 
+})
 
 router.put('/:id', isAuthenticated, (req, res) => {
 

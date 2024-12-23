@@ -1,3 +1,15 @@
-{{> nav }}
-<h1>served with handlebars</h1>
-    
+<p>username @ main: {{ user.username }}</p>
+{{> nav username=user.username}}
+<h1>Your Book Collection</h1>
+{{!-- {{#if loggedIn}} --}}
+    {{#if collections }}
+        {{> collections collections=collections}}
+    {{/if}}
+    {{#if books}}
+        {{> books books=books}}
+    {{/if}}
+    {{> addBooks }}
+    {{#if showAddForm }}
+        {{> addForm}}
+    {{/if}}
+{{!-- {{/if}} --}}

@@ -2,7 +2,7 @@
 
 
 export const showLoginPrompt = () => {
-    window.alert('login');
+    alert('login');
 }
 
 export const showRegisterPrompt = () => {
