@@ -1,0 +1,24 @@
+<section id="search-area">
+    <input type="search" id="search" name="search" placeholder="Search..." value="">
+    <ul>
+
+    </ul>
+</section>
+
+
+<script>
+    const searchBar = document.querySelector("#search")
+
+    searchBar.addEventListener("keyup", async () => {
+        await fetch(`http://localhost:3000/api/books/search?value=${searchBar.value}`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            mode: 'cors'
+        }).then(async (response) => {
+            const parsedResponse = await response.json()
+            console.log("response: ", parsedResponse.books)
+        })
+    })
+</script>

@@ -5,6 +5,7 @@ import * as db from '../config/sql.js';
 import { data } from './views.js'
 
 
+
 router.post('/register', async (req, res) => {
     bcrypt.genSalt(10, async function(err, salt) {
         if (err){
@@ -62,64 +63,49 @@ router.post('/login', async (req, res) => {
     console.log("Db response: ", response.rows)
     const userData = response.rows?.[0]
     console.log(userData)
+    if (!userData){
+        res.status(404).send({message: "Failure"})
+        return
+    }
     try {
-        if (userData){
-            bcrypt.compare(req.body.password, userData.password_hash, 
-                function(err, response){
-                    if (err){
-                        res.status(500).send(err)
-                    }
-                    if (response){
-                        // initiate sessions
-                        req.session.regenerate((err)=>{
-                            if (err){
-                                throw err
-                            } 
-                            req.session.user = {
-                                username: userData.username,
-                                id: userData.id
-                            }
-                            console.log('authorized: ', req.session.user.username)
-                            req.session.save((err)=>{
-                                if (err){
-                                    console.error(err)
-                                }
-                                console.log('sesson after saving: ', req.session)
-                                console.log('authorized: ', req.session)
-                                data.user = {username: userData.username, id: userData.id}
-                                res.status(200).send(req.session)
-                            })
-                        })
-                    } else {
-                        // return login error message for password mismatch
-                        res.status(200).send({message: "Failure"})
-                    }
+        bcrypt.compare(req.body.password, userData.password_hash, 
+            function(err, response){
+                if (err){
+                    res.status(500).send(err)
                 }
-            )
-        } 
+                if (response){
+                    // initiate sessions
+                    req.session.regenerate((err)=>{
+                        if (err){
+                            throw err
+                        } 
+                        req.session.user = {
+                            username: userData.username,
+                            id: userData.id
+                        }
+                        console.log('authorized: ', req.session.user.username)
+                        req.session.save((err)=>{
+                            if (err){
+                                console.error(err)
+                            }
+                            console.log('sesson after saving: ', req.session)
+                            console.log('authorized: ', req.session)
+                            data.user = {username: userData.username, id: userData.id}
+                            res.status(200).send(req.session)
+                        })
+                    })
+                } else {
+                    // return login error message for password mismatch
+                    res.status(404).send({message: "Failure"})
+                }
+            }
+        )
     } catch (err) {
-        // return login error messsage for username not found
-        res.status(404).send({message: 'login error'})
+        res.status(500).send({message: 'login error'})
     }
 })
 
-const isAuthenticated = async (req, res, next) => {
-    try {
-        console.log("session @ auth check: ", req.session)
-        // console.log(`auth type: ${typeof req.session.authenticated}, value: ${req.session.authenticated}, session: ${req.session.sess}`)
-        if (req.session.user?.username){
-            console.log('You are logged in.')
-            return next()
-        } else {
-            console.log('You are not logged in.\nReq.session: ', req.session, '\nUser: ', req.session?.user)
-            res.status(401).send({message: "Auth failure"})
-        }
-    } catch (err) {
-        console.error(err)
-    }
-}
-
-router.delete('/logout', isAuthenticated, (req, res) => {
+router.delete('/logout', db.isAuthenticated, (req, res) => {
     // Destroy session
     console.log('session data pre-destroy: ', req.session)
     req.session.destroy((err)=>{
@@ -129,6 +115,8 @@ router.delete('/logout', isAuthenticated, (req, res) => {
             console.log("session destroyed, logged out.")
             console.log('should be nothing: ', req.session)
             data.user = {}
+            data.books = []
+            data.collections = []
             res.status(200).send({
                 message: "Success"
             })

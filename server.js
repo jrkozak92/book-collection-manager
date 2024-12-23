@@ -14,6 +14,7 @@ import viewsController from './controllers/views.js';
 import * as authHelpers from './utils/authHelpers.js';
 import * as booksHelpers from './utils/booksHelpers.js';
 import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
 
 const PORT = process.env.PORT ?? 3000
 
@@ -52,6 +53,7 @@ app.use(cors({
 }))
 app.use(methodOverride('_method'))
 app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 app.options('*', cors())
 app.use('/api/auth', authController)
 app.use('/api/books', booksController)  

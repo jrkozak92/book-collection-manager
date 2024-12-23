@@ -1,4 +1,12 @@
 <h4>This is the Collections partial</h4>
 {{#each collections}}
-    <p>{{this}}</p>
+    <p>{{ this.name }}</p>
 {{/each}}
+<form action="/api/books/collections" method="POST">
+    <p>New Collection: </p>
+    <label for="name">Name: </label>
+    <input type="text" id="name" name="name" required/>
+    <button type="submit" id="add-submit" value="default">Add New Collection</button>
+    <button type="button" id="add-close" value="cancel">Cancel</button>
+    <p id="add-message" class="hide"></p>
+</form>

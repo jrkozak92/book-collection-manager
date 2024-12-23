@@ -1,0 +1,51 @@
+<form>
+    <p>Book Details: {{ book._id }}</p>js
+    <label for="title">Title: </label>
+    <input type="text" id="title" name="title" value="{{ book.title }}" required/>
+    <label for="author">Author: </label>
+    <input type="text" id="author" name="author" value="{{ book.author }}" required/>
+    <label for="isbn">ISBN: </label>
+    <input type="text" id="isbn" name="isbn" value="{{ book.isbn }}" required/>
+    <label for="category">Category: </label>
+    <input type="text" id="category" name="category" value="{{ book.category }}" required/>
+    <label for="collection">Collection: </label>
+    <input list="collections-list" id="collection" name="collection" required/>
+    <datalist id="collections-list">
+        {{#each collections}}
+            <option value="{{ this.id }}. {{ this.name }}"></option>
+        {{/each}}
+    </datalist>
+    <button type="button" id="edit-submit" value="default">Update Book</button>
+    <a href="/">Cancel</a>
+    <p id="add-message" class="hide"></p>
+</form>
+<script>
+    const submitButton = document.querySelector("#edit-submit")
+    const title = document.querySelector("#title")
+    const author = document.querySelector("#author")
+    const isbn = document.querySelector("#isbn")
+    const category = document.querySelector("#category")
+    const collection = document.querySelector("#collection")
+
+    submitButton.addEventListener("click", async (event) => {
+        event.preventDefault()
+        await fetch("http://localhost:3000/api/books/{{ book._id }}", {
+            method: 'PUT',
+            body: JSON.stringify({
+                id: "{{ book._id }}",
+                title: title.value,
+                author: author.value,
+                isbn: isbn.value,
+                category: category.value,
+                collection: collection.value
+            }),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            mode: 'cors'
+        }).then((response) => {
+            console.log("response: ", response)
+            window.location.href = "http://localhost:3000/"
+        })
+    })
+</script>

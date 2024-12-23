@@ -8,7 +8,14 @@
     <input type="text" id="isbn" name="isbn" required/>
     <label for="category">Category: </label>
     <input type="text" id="category" name="category" required/>
+    <label for="collection">Collection: </label>
+    <input list="collections-list" id="collection" name="collection" required/>
+    <datalist id="collections-list">
+        {{#each collections}}
+            <option value="{{ this.id }}. {{ this.name }}"></option>
+        {{/each}}
+    </datalist>
     <button type="submit" id="add-submit" value="default">Add New Book</button>
-    <button type="button" id="add-close" value="cancel">Cancel</button>
+    <a href="/">Cancel</a>
     <p id="add-message" class="hide"></p>
 </form>

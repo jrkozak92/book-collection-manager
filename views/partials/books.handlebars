@@ -2,10 +2,33 @@
 <div id="books-list">
     {{#each books}}
         <div>
-            <p>{{ this.title }}</p>
-            <p>{{ this.author }}</p>
-            <p>{{ this.isbn }}</p>
-            <p>{{ this.collection }}</p>
+            <p>Title: {{ this.title }}</p>
+            <p>Author: {{ this.author }}</p>
+            <p>ISBN: {{ this.isbn }}</p>
+            <p>Collection: {{ this.collection_id }}</p>
+            <a href="/edit-book/{{ this.isbn }}">Edit this Book</a>
+            <button type="button" id="delete-button">Delete this Book</button>
+            <script>
+                const deleteButton = document.querySelector("#delete-button")
+
+                deleteButton.addEventListener("click", async (event) => {
+                    event.preventDefault()
+                    await fetch(`http://localhost:3000/api/books/{{ this._id }}`, {
+                        method: 'DELETE',
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        mode: 'cors'
+                    }).then((response) => {
+                        console.log("response: ", response)
+                        window.location.href = "http://localhost:3000/"
+                    })
+                })
+            </script>
         </div>
+        {{#if this.showEditForm }}
+            {{> editBookForm book=this collections=../collections}}
+        {{/if}}
+        
     {{/each}}
 </div>

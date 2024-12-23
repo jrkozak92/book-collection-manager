@@ -1,15 +1,14 @@
-<p>username @ main: {{ user.username }}</p>
 {{> nav username=user.username}}
 <h1>Your Book Collection</h1>
-{{!-- {{#if loggedIn}} --}}
-    {{#if collections }}
-        {{> collections collections=collections}}
-    {{/if}}
+{{#if user.username}}
+    {{> collections collections=collections}}
     {{#if books}}
-        {{> books books=books}}
+        {{> books books=books collections=collections}}
     {{/if}}
     {{> addBooks }}
     {{#if showAddForm }}
-        {{> addForm}}
+        {{> addForm collections=collections}}
     {{/if}}
-{{!-- {{/if}} --}}
+{{else}}
+    <p>Please login to access your collections.</p>
+{{/if}}
