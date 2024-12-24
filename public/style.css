@@ -1,5 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
 h1 {
-    color: black;
+    justify-self: center;
+    height: max-content;
+}
+
+#entry-message {
+    text-align: center;
 }
 
 .show {
@@ -8,4 +21,155 @@ h1 {
 
 .hide {
     display: none;
+}
+
+body {
+    background-color: rgb(18, 30, 44);
+    color: white;
+    display: grid;
+    align-items: start;
+    padding: 10px;
+}
+
+input {
+    background-color: lightgrey;
+    color: black;
+    max-width: 500px;
+    padding: 8px;
+    margin: 2px;
+    border: 1px solid white;
+    border-radius: 6px;
+}
+
+button, .button {
+    font-size: 1.2em;
+    background-color: transparent;
+    color: white;
+    text-decoration: none;
+    width: max-content;
+    max-width: 25vw;
+    height: max-content;
+    padding: 8px;
+    margin-top: 10px;
+    border: 1px solid white;
+    border-radius: 6px;
+    transition: all .25s ease;
+}
+
+.button:hover, button:hover {
+    cursor: pointer;
+    background-color:white;
+    color: rgb(18, 30, 44);
+}
+
+#nav {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas:
+        "search user";
+    align-items: center;
+    justify-content: space-around;
+}
+
+#user-controls {
+    grid-area: user;
+    display: flex;
+    gap: 15px;
+    justify-content: end;
+    align-items: center;
+}
+
+#auth-controls {
+    grid-area: user;
+}
+
+#search-area {
+    grid-area: search;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+a {
+    text-align: center;
+}
+
+.book-card {
+    background-color: rgba(214, 214, 214, .1);
+    margin: 10px;
+    padding: 10px;
+    max-width: max-content;
+    border: 1px solid white;
+    border-radius: 6px;
+}
+
+.book-title {
+    text-align:center;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+#collections-panel {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    column-gap: 20px;
+    align-items: center;
+}
+
+.collection {
+    display: inline-block;
+    text-align: center;
+    flex-grow: 1;
+    border: 1px solid white;
+    border-radius: 6px;
+    background-color: rgba(214, 214, 214, .1);
+}
+
+dialog {
+    background-color: rgb(18, 30, 44);
+    color: white;
+    position: absolute;
+    height:300px;
+    width:300px;
+    top: 3em;
+    left: 100%;
+    transform: translate(-310px, 0);
+}
+
+#search-list {
+    background-color: rgb(18, 30, 44);
+    color: white;
+    position: absolute;
+    top:3em;
+    width:300px;
+    top: 3em;
+    left: 5%;
+    border: 1px solid white;
+    border-radius: 6px;
+    padding: 10px;
+    list-style: none;
+}
+
+.list-header {
+    border-bottom: 2px solid lightgrey;
+    font-weight: bold;
+}
+
+.found-book {
+    border-bottom: 1px solid rgba(214, 214, 214, .1); 
+}
+
+.found-book:hover {
+    cursor: pointer;
+    background-color: rgba(214, 214, 214, .1);
+}
+
+a {
+    text-decoration: none;
+    color: white;
 }

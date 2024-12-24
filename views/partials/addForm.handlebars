@@ -1,4 +1,4 @@
-<form action="/api/books" method="POST">
+<form action="/api/books" method="POST" >
     <p>Book Details: </p>
     <label for="title">Title: </label>
     <input type="text" id="title" name="title" required/>
@@ -9,13 +9,13 @@
     <label for="category">Category: </label>
     <input type="text" id="category" name="category" required/>
     <label for="collection">Collection: </label>
-    <input list="collections-list" id="collection" name="collection" required/>
+    <input list="collections-list" id="collection-select" name="collection" required/>
     <datalist id="collections-list">
         {{#each collections}}
             <option value="{{ this.id }}. {{ this.name }}"></option>
         {{/each}}
     </datalist>
     <button type="submit" id="add-submit" value="default">Add New Book</button>
-    <a href="/">Cancel</a>
+    <a href="/" class="button">Cancel</a>
     <p id="add-message" class="hide"></p>
 </form>

@@ -1,4 +1,4 @@
-{{> nav username=user.username}}
+{{> nav username=user.username collections=collections}}
 <h1>Your Book Collection</h1>
 {{#if user.username}}
     {{> collections collections=collections}}
@@ -10,5 +10,5 @@
         {{> addForm collections=collections}}
     {{/if}}
 {{else}}
-    <p>Please login to access your collections.</p>
+    <p id="entry-message">Please login to access your collections.</p>
 {{/if}}

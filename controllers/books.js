@@ -6,14 +6,34 @@ import { data } from './views.js';
 
 
 router.get('/search', async (req, res) => {
-    console.log('searching for ', req.query.value)
-    const filteredBooks = data.books.filter((book) => {
-        if (book.isbn.includes(req.query.value) || book.title.includes(req.query.value) || book.author.includes(req.query.value)){
-            return book
+    console.log('searching for ', req.query.value, req.query.collection)
+    let bookList = undefined
+    const collection = req.query.collection[0] ?? ""
+    if (collection !== ""){
+        bookList = data.books.filter((book) => {
+                return book.collection_id == collection
+            })
+    } else {
+        bookList = data.books
+    }
+    const searchResults = {
+        isbn: [],
+        title: [],
+        author: []
+    }
+    bookList.forEach((book) => {
+        if (book.isbn.includes(req.query.value)){
+            searchResults.isbn.push(book)
+        }
+        if (book.title.includes(req.query.value)){
+            searchResults.title.push(book)
+        }
+        if (book.author.includes(req.query.value)){
+            searchResults.author.push(book)
         }
     })
-    console.log("results: ", filteredBooks)
-    res.status(200).send({ books: filteredBooks})
+    console.log("results: ", searchResults)
+    res.status(200).send({ results: searchResults})
 })
 
 router.get('/collections', async (req, res) => {
@@ -87,10 +107,11 @@ router.post('/', db.isAuthenticated, async (req, res) => {
 
 router.put('/:id', db.isAuthenticated, async (req, res) => {
     try {
+        console.log("body pre-update: ", req.body)
         const response = await Book.findByIdAndUpdate(req.params.id, req.body)
         console.log("Response @ Book update: ", response)
         const newBooks = data.books.map((book) => {
-            if (book.id === req.params.id) {
+            if (book._id === req.params.id) {
                 book = response
                 book.showEditForm = false
                 return book

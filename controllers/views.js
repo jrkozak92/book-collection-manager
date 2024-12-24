@@ -63,9 +63,10 @@ router.get('/add-book', (req, res) => {
     )
 })
 
-router.get('/edit-book/:isbn', (req, res) => {
+router.get('/edit-book/:id', (req, res) => {
     const newBooks = data.books.map((book) => {
-        if (book.isbn === req.params.isbn){
+        console.log(book._id == req.params.id, book._id, req.params.id)
+        if (book._id == req.params.id){
             book.showEditForm = true
             return book
         }

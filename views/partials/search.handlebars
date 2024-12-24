@@ -1,16 +1,24 @@
 <section id="search-area">
-    <input type="search" id="search" name="search" placeholder="Search..." value="">
-    <ul>
+    <input type="search" id="search" name="search" placeholder="Search..." value="" incremental>
+    <label for="collection">Collection: </label>
+    <input list="collections-list" id="collection" name="collection" placeholder="Pick one..."/>
+    <datalist id="collections-list">
+        {{#each collections}}
+            <option value="{{ this.id }}. {{ this.name }}"></option>
+        {{/each}}
+    </datalist>
+    <ul id="search-list" class="hide">
 
     </ul>
 </section>
 
-
 <script>
     const searchBar = document.querySelector("#search")
+    const searchCollection = document.querySelector("#collection")
+    const searchList = document.querySelector("#search-list")
 
-    searchBar.addEventListener("keyup", async () => {
-        await fetch(`http://localhost:3000/api/books/search?value=${searchBar.value}`, {
+    const search = async () => {
+        const result = await fetch(`http://localhost:3000/api/books/search?value=${searchBar.value}&collection=${searchCollection.value}`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json"
@@ -18,7 +26,66 @@
             mode: 'cors'
         }).then(async (response) => {
             const parsedResponse = await response.json()
-            console.log("response: ", parsedResponse.books)
+            console.log("response: ", parsedResponse.results)
+            return parsedResponse.results
         })
+        updateUI(result)
+        return result
+    }
+
+    const updateUI = (searchObj) => {
+        searchList.innerHTML = ''
+        if (searchObj === null){
+            return
+        }
+        if (searchObj.title.length){
+            const titleHeader = document.createElement('li')
+            titleHeader.classList.add('list-header')
+            titleHeader.innerText = 'Title:'
+            searchList.append(titleHeader)
+            searchObj.title.map((book, index) => {
+                searchList.innerHTML += `<li class="found-book"><a href="http://localhost:3000#${book._id}">${book.title}</a></li>`
+            })
+        }
+        if (searchObj.author.length){
+            const authorHeader = document.createElement('li')
+            authorHeader.classList.add('list-header')
+            authorHeader.innerText = 'Author:'
+            searchList.append(authorHeader)
+            searchObj.author.map((book) => {
+                searchList.innerHTML += `<li class="found-book"><a href="http://localhost:3000#${book._id}">${book.author}</a></li>`
+            })
+        }
+        if (searchObj.isbn.length){
+            const isbnHeader = document.createElement('li')
+            isbnHeader.classList.add('list-header')
+            isbnHeader.innerText = 'ISBN:'
+            searchList.append(isbnHeader)
+            searchObj.isbn.map((book) => {
+                searchList.innerHTML += `<li class="found-book"><a href="http://localhost:3000#${book._id}">${book.isbn}</a></li>`
+            })
+        }
+        if (searchList.innerHTML.length){
+            searchList.classList.replace("hide", "show")
+        } else {
+            searchList.classList.replace("show", "hide")
+        }
+    }
+
+    searchBar.addEventListener("search", async () => {
+        console.log(searchBar.value)
+        if (searchBar.value !== ""){
+            const result = await search()
+        } else if (searchCollection.value === ""){
+            updateUI(null)
+        }
+    })
+
+    collection.addEventListener("keydown", async (event) => {
+        const result = await search()
+    })
+
+    searchList.addEventListener('blur', () => {
+        searchList.classList.replace("show", "hide")
     })
 </script>

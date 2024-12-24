@@ -1,17 +1,17 @@
-<h4>This is the Books partial</h4>
+<h4 class="section-title">Books</h4>
 <div id="books-list">
     {{#each books}}
-        <div>
-            <p>Title: {{ this.title }}</p>
+        <div id="{{ this._id }}" class="book-card">
+            <p class="book-title">Title: {{ this.title }}</p>
             <p>Author: {{ this.author }}</p>
             <p>ISBN: {{ this.isbn }}</p>
             <p>Collection: {{ this.collection_id }}</p>
-            <a href="/edit-book/{{ this.isbn }}">Edit this Book</a>
+            <a href="/edit-book/{{ this._id }}" class="button">Edit this Book</a>
             <button type="button" id="delete-button">Delete this Book</button>
             <script>
-                const deleteButton = document.querySelector("#delete-button")
+                const deleteButton{{ this._id }} = document.querySelector("#delete-button")
 
-                deleteButton.addEventListener("click", async (event) => {
+                deleteButton{{ this._id }}.addEventListener("click", async (event) => {
                     event.preventDefault()
                     await fetch(`http://localhost:3000/api/books/{{ this._id }}`, {
                         method: 'DELETE',

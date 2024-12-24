@@ -1,31 +1,31 @@
 <form>
-    <p>Book Details: {{ book._id }}</p>js
+    <p>Edit Book Details:</p>
     <label for="title">Title: </label>
-    <input type="text" id="title" name="title" value="{{ book.title }}" required/>
+    <input type="text" id="title-{{ book._id}}" name="title" value="{{ book.title }}" required/>
     <label for="author">Author: </label>
-    <input type="text" id="author" name="author" value="{{ book.author }}" required/>
+    <input type="text" id="author-{{ book._id}}" name="author" value="{{ book.author }}" required/>
     <label for="isbn">ISBN: </label>
-    <input type="text" id="isbn" name="isbn" value="{{ book.isbn }}" required/>
+    <input type="text" id="isbn-{{ book._id}}" name="isbn" value="{{ book.isbn }}" required/>
     <label for="category">Category: </label>
-    <input type="text" id="category" name="category" value="{{ book.category }}" required/>
+    <input type="text" id="category-{{ book._id}}" name="category" value="{{ book.category }}" required/>
     <label for="collection">Collection: </label>
-    <input list="collections-list" id="collection" name="collection" required/>
+    <input list="collections-list" id="collection-{{ book._id}}" name="collection" required/>
     <datalist id="collections-list">
         {{#each collections}}
             <option value="{{ this.id }}. {{ this.name }}"></option>
         {{/each}}
     </datalist>
-    <button type="button" id="edit-submit" value="default">Update Book</button>
-    <a href="/">Cancel</a>
-    <p id="add-message" class="hide"></p>
+    <button type="button" id="edit-submit-{{ book._id}}" value="default">Update Book</button>
+    <a href="/" class="button">Cancel</a>
+    <p id="add-message-{{ book._id}}" class="hide"></p>
 </form>
 <script>
-    const submitButton = document.querySelector("#edit-submit")
-    const title = document.querySelector("#title")
-    const author = document.querySelector("#author")
-    const isbn = document.querySelector("#isbn")
-    const category = document.querySelector("#category")
-    const collection = document.querySelector("#collection")
+    const submitButton = document.querySelector("#edit-submit-{{ book._id}}")
+    const title = document.querySelector("#title-{{ book._id}}")
+    const author = document.querySelector("#author-{{ book._id}}")
+    const isbn = document.querySelector("#isbn-{{ book._id}}")
+    const category = document.querySelector("#category-{{ book._id}}")
+    const collection = document.querySelector("#collection-{{ book._id}}")
 
     submitButton.addEventListener("click", async (event) => {
         event.preventDefault()
@@ -37,7 +37,7 @@
                 author: author.value,
                 isbn: isbn.value,
                 category: category.value,
-                collection: collection.value
+                collection_id: Number(collection.value[0])
             }),
             headers: {
                 "Content-Type": "application/json"
